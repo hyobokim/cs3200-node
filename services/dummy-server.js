@@ -11,8 +11,8 @@ const mysql = require('mysql2');
 const con = mysql.createConnection({
   host : "localhost",
   user: "root",
-  password: "16465265437kezami",
-  database: "neu_ultimate"
+  password: "Comets1283648",
+  database: "huskies_ultimate"
 });
 
 con.connect(function(err) {
@@ -45,13 +45,6 @@ module.exports = (app) => {
     })
   })
 
-  app.get('/api/teams/:teamId', (req, res) => {
-    con.query("SELECT * FROM team WHERE teamId = " + req.params["teamId"], function (err, result) {
-      if (err) throw err;
-      res.send(result);
-    })
-  })
-
   app.get('/api/teams', (req, res) => {
     con.query("SELECT * FROM team", function (err, result) {
       if (err) throw err;
@@ -59,12 +52,27 @@ module.exports = (app) => {
     })
   })
 
-  app.get('/api/teams/:teamId/events/:tournamentId', (req, res) => {
+  app.get('/api/teams/:teamId/events/:tournamentId/games', (req, res) => {
     con.query("CALL getEventGames(" + req.params["tournamentId"] + ", " + req.params["teamId"] + ")" , function (err, result) {
       if (err) throw err;
-      res.send(result);
+      res.send(result[0]);
     })
   })
+
+  app.get('/api/teams/:teamId/events/:tournamentId/games/:gameId/points', (req, res) => {
+    con.query("CALL getGamePoints(" + req.params["gameId"] + ")" , function (err, result) {
+      if (err) throw err;
+      res.send(result[0]);
+    })
+  })
+
+  app.get('/api/teams/:teamId/events/:tournamentId/games/:gameId/points/:pointId/stats', (req, res) => {
+    con.query("CALL getPointStats(" + req.params["pointId"] + ")" , function (err, result) {
+      if (err) throw err;
+      res.send(result[0]);
+    })
+  })
+
 
   app.delete('/api/teams/:teamId/players/:nuid', (req, res) => {
     con.query("DELETE from player as p where p.nuID=" + req.params["nuid"], function(err, result) {
