@@ -11,8 +11,8 @@ const mysql = require('mysql2');
 const con = mysql.createConnection({
   host : "localhost",
   user: "root",
-  password: "Comets1283648",
-  database: "huskies_ultimate"
+  password: "16465265437kezami",
+  database: "neu_ultimate"
 });
 
 con.connect(function(err) {
@@ -58,6 +58,40 @@ module.exports = (app) => {
       res.send(result);
     })
   })
+
+  app.get('/api/teams/:teamId/events/:tournamentId', (req, res) => {
+    con.query("CALL getEventGames(" + req.params["tournamentId"] + ", " + req.params["teamId"] + ")" , function (err, result) {
+      if (err) throw err;
+      res.send(result);
+    })
+  })
+
+  app.delete('/api/teams/:teamId/players/:nuid', (req, res) => {
+    con.query("DELETE from player as p where p.nuID=" + req.params["nuid"], function(err, result) {
+      if (err) throw err;
+      console.log(result);
+      res.send(result);
+    })
+  })
+
+  app.post('/api/teams/:teamId/players', (req, res) => {
+
+    console.log(req.body);
+
+    con.query("INSERT INTO player (name, number, captain, team, nuID)"
+        + " VALUES (" + "'" + req.body.playerName + "'" + ", " + req.body.playerNumber + ", " + req.body.isCoach + ", " + req.params["teamId"] + ", " + req.body.playernuid + ")",
+        function(err, result) {
+      if (err) throw err;
+
+      res.json({
+        "name": req.body.playerName,
+        "number": req.body.playerNumber,
+        "captain": req.body.isCoach,
+        "team": req.params["teamId"],
+        "nuID": req.body.playernuid});
+    })
+  })
+
 }
 
 
