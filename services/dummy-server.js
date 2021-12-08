@@ -11,8 +11,8 @@ const mysql = require('mysql2');
 const con = mysql.createConnection({
   host : "localhost",
   user: "root",
-  password: "16465265437kezami",
-  database: "neu_ultimate"
+  password: "Comets1283648",
+  database: "huskies_ultimate"
 });
 
 con.connect(function(err) {
@@ -30,31 +30,32 @@ module.exports = (app) => {
   //   res.send("hello");
   // })
 
-  app.get('/api/a-players', (req, res) => {
-    con.query("SELECT * FROM player where team=0", function (err, result) {
-      if (err) throw err;
-      res.send(result);
-    })
-  })
 
-  app.get('/api/players/:teamId', (req, res) => {
-    con.query("Call getTeamPlayers(" + req.params["teamId"] + ")", function (err, result) {
-      if (err) throw err;
-      res.send(result);
-    })
-  })
-
-  app.get('/api/c-players', (req, res) => {
-    con.query("SELECT * FROM player where team=2", function (err, result) {
-      if (err) throw err;
-      res.send(result);
-    })
-  })
-
-  app.get('/api/team/:teamId/players', (req, res) => {
+  app.get('/api/teams/:teamId/players', (req, res) => {
     con.query("CALL getTeamPlayers(" + req.params["teamId"] + ")", function (err, result) {
       if (err) throw err;
       res.send(result[0]);
+    })
+  })
+
+  app.get('/api/teams/:teamId/events', (req, res) => {
+    con.query("CALL getTeamEvents(" + req.params["teamId"] + ")", function (err, result) {
+      if (err) throw err;
+      res.send(result[0]);
+    })
+  })
+
+  app.get('/api/teams/:teamId', (req, res) => {
+    con.query("SELECT * FROM team WHERE teamId = " + req.params["teamId"], function (err, result) {
+      if (err) throw err;
+      res.send(result);
+    })
+  })
+
+  app.get('/api/teams', (req, res) => {
+    con.query("SELECT * FROM team", function (err, result) {
+      if (err) throw err;
+      res.send(result);
     })
   })
 }
