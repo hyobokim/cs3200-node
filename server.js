@@ -28,7 +28,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-require('./services/dummy-server')(app);
+require('./services/sql-server')(app);
 
 // module.exports = (app) => {
 //   // app.get('/data', (req, res) => {
